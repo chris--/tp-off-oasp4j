@@ -3,7 +3,6 @@ package io.oasp.gastronomy.restaurant.offermanagement.dataaccess.impl.dao;
 import io.oasp.gastronomy.restaurant.general.common.api.datatype.Money;
 import io.oasp.gastronomy.restaurant.general.dataaccess.base.dao.ApplicationDaoImpl;
 import io.oasp.gastronomy.restaurant.offermanagement.dataaccess.api.SpecialEntity;
-import io.oasp.gastronomy.restaurant.offermanagement.dataaccess.api.WeeklyPeriodEmbeddable;
 import io.oasp.gastronomy.restaurant.offermanagement.dataaccess.api.dao.SpecialDao;
 import io.oasp.gastronomy.restaurant.offermanagement.logic.api.to.SpecialSearchCriteriaTo;
 import io.oasp.gastronomy.restaurant.offermanagement.logic.api.to.WeeklyPeriodSearchCriteriaTo;
@@ -54,7 +53,8 @@ public class SpecialDaoImpl extends ApplicationDaoImpl<SpecialEntity> implements
 
     WeeklyPeriodSearchCriteriaTo activePeriod = criteria.getActivePeriod();
     if (activePeriod != null) {
-      query.where(Alias.$(special.getActivePeriod()).eq(activePeriod));
+      query.where(Alias.$(special.getActivePeriod().getStartingDay()).goe(activePeriod.getStartingDay()));
+      query.where(Alias.$(special.getActivePeriod().getEndingDay()).loe(activePeriod.getEndingDay()));
     }
 
     Money specialPrice = criteria.getSpecialPrice();
@@ -64,5 +64,4 @@ public class SpecialDaoImpl extends ApplicationDaoImpl<SpecialEntity> implements
 
     return findPaginated(criteria, query, alias);
   }
-
 }
